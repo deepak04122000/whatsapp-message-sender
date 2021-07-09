@@ -6,9 +6,12 @@
   "dependencies": {
     "puppeteer": "^10.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/puppeteer": "^5.4.4",
+    "nodemon": "^2.0.10"
+  },
   "scripts": {
-    "dev": "node index.js",
+    "dev": "nodemon src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Deepak Kumar Maurya",
