@@ -1,4 +1,4 @@
-import puppeteer, { Browser } from "puppeteer";
+import puppeteer from "puppeteer";
 
 // (async () => {
 //     const browser = await puppeteer.launch();
@@ -9,28 +9,51 @@ import puppeteer, { Browser } from "puppeteer";
 //     await browser.close();
 // })();
 
+export class WhatsAppSender {
+  constructor(public links: string[]) {}
+
+  send() {
+    try {
+      scrap(this.links);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 async function scrap(urls: string[]) {
   const browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
   for (let index = 0; index < urls.length; index++) {
-    await send(page, urls[index]);
+    await sendProcess(page, urls[index], index);
   }
   console.log("Done");
+  browser.close();
 }
 
-const send = async (page: puppeteer.Page, url: string) => {
+const sendProcess = async (
+  page: puppeteer.Page,
+  url: string,
+  index: number
+) => {
   await page.goto(url);
   await page.waitForFunction("window.alert");
   await page.keyboard.press("Enter");
-  await page.waitForSelector('span[title="MB"]');
+  await page.waitForSelector('span[title="P P Group"]', { timeout: 100000 });
   // const target = await page.$('span[title="MB"]');
   // await target.click();
   // const input = await page.$(
   //   "#main > footer > div.vR1LG._3wXwX.copyable-area > div._2A8P4 > div > div._2_1wd.copyable-text.selectable-text"
   // );
   // await input.type("HEllo from code.....");
+  if (index === 0) {
+    console.log(index);
+    await wait(6000);
+  } else {
+    await wait(1000);
+  }
   await page.keyboard.press("Enter");
-  await wait(10000);
+  await wait(4000);
 };
 
 const wait = (time: number) => {
@@ -40,20 +63,3 @@ const wait = (time: number) => {
     }, time);
   });
 };
-
-try {
-  scrap([
-    "https://web.whatsapp.com/send?phone=+910000000000&text=banana",
-    "https://web.whatsapp.com/send?phone=+910000000000&text=mango",
-    "https://web.whatsapp.com/send?phone=+910000000000&text=guavava",
-    "https://web.whatsapp.com/send?phone=+910000000000&text=pineapple",
-    "https://web.whatsapp.com/send?phone=+910000000000&text=kivi",
-    "https://web.whatsapp.com/send?phone=+910000000000&text=jackfruit",
-    "https://web.whatsapp.com/send?phone=+910000000000&text=papaya",
-    "https://web.whatsapp.com/send?phone=+910000000000&text=fig",
-    "https://web.whatsapp.com/send?phone=+910000000000&text=grapes",
-    "https://web.whatsapp.com/send?phone=+910000000000&text=blackberry",
-  ]);
-} catch (e) {
-  console.log(e);
-}
